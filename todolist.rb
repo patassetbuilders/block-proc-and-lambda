@@ -15,7 +15,7 @@ class TodoList
     if to_do.class.to_s == 'Todo'  
       @todos  << to_do
     else
-      raise 'Type Error - You can only add Todo objects'
+      raise TypeError, 'You can only add Todo objects'
     end
   end
   
@@ -37,7 +37,7 @@ class TodoList
   
   def item_at(position)
     if position > @todos.size
-      raise "index error"
+      raise IndexError
     else
       @todos[position]
     end
@@ -45,7 +45,7 @@ class TodoList
   
   def mark_done_at(position)
     if position > @todos.size
-      raise "index error"
+      raise IndexError
     else
       @todos[position].done!
     end
@@ -53,7 +53,7 @@ class TodoList
 
   def mark_undone_at(position)
     if position > @todos.size
-      raise "index error"
+      raise IndexError
     else
       @todos[position].undone!
     end
@@ -69,14 +69,14 @@ class TodoList
   
   def remove_at(position)
     if position > @todos.size
-      raise "index error"
+      raise IndexError
     else
       @todos.delete_at(position)
     end
   end
   
   def to_s
-    puts "------- #{@title} ------"
+    puts "---- #{@title} ----"
     @todos.each do |todo|
       puts todo
     end
@@ -91,15 +91,6 @@ class TodoList
     end
     self
   end
-  
- #def select
- #  @todos
- #  selected_items = []
- #  each do |todo|
- #    selected_items << todo if yield(todo)
- #  end
- #  selected_items
- #end
   
   def select #returning a todolistobject
     completed_items = TodoList.new('Completed Items')
@@ -118,7 +109,14 @@ class TodoList
     nil
   end
   
-  def all_done
+  def done? 
+    @todos.each do |todo|
+      return false if todo.done == false
+    end
+    true
+  end
+  
+  def all_done # returns a lsit of completed items
     all_completed_items = TodoList.new('All Completed Items')
     @todos.each do |todo|
       all_completed_items.add(todo) if todo.done?
@@ -126,7 +124,7 @@ class TodoList
     all_completed_items
   end
   
-  def all_not_done
+  def all_not_done # returns a list of open items
     all_open_items = TodoList.new('All Open Items')
     @todos.each do |todo|
       all_open_items.add(todo) if !todo.done?
@@ -134,7 +132,7 @@ class TodoList
     all_open_items
   end
   
-  def mark_done!(todo_title)
+  def mark_done!(todo_title) # given a title it marks the item done
     item = self.find_by_title(todo_title)
     if item
       item.done!
@@ -144,7 +142,7 @@ class TodoList
     self
   end
   
-  def mark_all_done!
+  def done!
     @todos.each do |todo|
       todo.done!
     end
@@ -155,8 +153,13 @@ class TodoList
     @todos.each do |todo|
       todo.undone!
     end
+    self
   end
-  self
+  
+  def to_a
+    @todos
+  end
+  
 end
 
 
