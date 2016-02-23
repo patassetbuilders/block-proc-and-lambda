@@ -33,7 +33,7 @@ class ToDoListTest < Minitest::Test
     end
     
     def test_last
-      assert_equal(@todo3, @list.last
+      assert_equal(@todo3, @list.last)
     end
     
     def test_shift
